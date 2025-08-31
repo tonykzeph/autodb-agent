@@ -13,6 +13,7 @@ class R2StorageService(StorageInterface):
         self.access_key_id = os.getenv("R2_ACCESS_KEY_ID")
         self.secret_access_key = os.getenv("R2_SECRET_ACCESS_KEY")
         self.endpoint_url = os.getenv("R2_ENDPOINT_URL")
+        self.public_url = os.getenv("R2_PUBLIC_URL")
         self.bucket_name = os.getenv("R2_BUCKET_NAME")
         self.region = os.getenv("R2_REGION", "auto")
         
@@ -78,5 +79,10 @@ class R2StorageService(StorageInterface):
             return False
 
     async def get_file_url(self, key: str) -> str:
-        """Get the public URL of a file"""
-        return f"{self.endpoint_url}/{self.bucket_name}/{key}"
+        """Get the public URL for the file"""
+        if self.public_url:
+            # Use public URL for direct access
+            return f"{self.public_url}/{key}"
+        else:
+            # Fallback to private endpoint (requires signed URLs)
+            return f"{self.endpoint_url}/{self.bucket_name}/{key}"
