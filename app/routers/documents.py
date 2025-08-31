@@ -30,6 +30,9 @@ async def upload_document(
     storage_key = f"documents/{unique_filename}"
     
     try:
+        # Reset file pointer to beginning
+        file.file.seek(0)
+        
         # Upload to R2 storage
         storage_url = await storage_service.upload_file(
             file=file.file,
@@ -54,7 +57,13 @@ async def upload_document(
         
         return DocumentUploadResponse(**document.model_dump(by_alias=True))
         
+    except ValueError as e:
+        # Environment variable issues
+        raise HTTPException(status_code=500, detail=f"Configuration error: {str(e)}")
     except Exception as e:
+        # Log the full error for debugging
+        import traceback
+        print(f"Upload error: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @router.get("/", response_model=List[DocumentUploadResponse])

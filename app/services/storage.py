@@ -71,8 +71,7 @@ class R2StorageService(StorageInterface):
         try:
             await loop.run_in_executor(
                 self.executor,
-                self.client.delete_object,
-                {'Bucket': self.bucket_name, 'Key': key}
+                lambda: self.client.delete_object(Bucket=self.bucket_name, Key=key)
             )
             return True
         except ClientError:
