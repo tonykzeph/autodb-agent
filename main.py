@@ -1,7 +1,14 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
+import logging
 from app.database import connect_to_mongo, close_mongo_connection
 from app.routers import documents
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 load_dotenv()
 

@@ -48,6 +48,10 @@ class DocumentUploadResponse(BaseModel):
     storage_url: str
     uploaded_at: datetime
     
+    # AI Processing metadata
+    ai_workflow: Optional[dict] = None
+    processing_results: Optional[dict] = None
+    
     model_config = {
         "populate_by_name": True,
         "arbitrary_types_allowed": True
@@ -62,6 +66,10 @@ class DocumentModel(BaseModel):
     storage_key: str
     storage_url: str
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    # AI Processing metadata
+    ai_workflow: Optional[dict] = None
+    processing_results: Optional[dict] = None
     
     model_config = {
         "populate_by_name": True,
